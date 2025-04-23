@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mega Animal Sanctuary</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #FFB347, #4BC0C8);
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #1E88E5;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.7);
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+        }
+        .animal-emoji {
+            font-size: 2rem;
+            vertical-align: middle;
+            margin: 0 5px;
+        }
+        #sanctuary-container {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border: 4px solid #1E88E5;
+        }
+        #story {
+            height: 350px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border: 2px dashed #FF7043;
+            text-align: left;
+        }
+        #userInput {
+            width: 70%;
+            padding: 14px;
+            border: 3px solid #FF7043;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        #sendButton {
+            padding: 14px 28px;
+            background: #1E88E5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #sendButton:hover {
+            background: #0D47A1;
+            transform: translateY(-2px);
+        }
+        .player-msg {
+            color: #5E35B1;
+            margin: 10px 0;
+        }
+        .ai-msg {
+            color: #00897B;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        <span class="animal-emoji">🦭</span>
+        Mega Animal Sanctuary
+        <span class="animal-emoji">🐘</span>
+    </h1>
+    <p style="color:#1A237E; font-size:1.2rem; margin-top:0">
+        Featuring: 🦭 🐕 🐢 🦛 🐈 🐻 🦓 🐻‍❄️ 🦒 🦏 🐘 🦘 🐊
+    </p>
+
+    <div id="sanctuary-container">
+        <div id="story"></div>
+        <div style="display:flex; align-items:center">
+            <input id="userInput" placeholder="Interact with our animals! (e.g. 'feed the elephant')" autocomplete="off">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced animal database (raccoon removed, new animals added)
+        const animals = {
+            seal: { emoji: "🦭", color: "#5C6BC0", 
+                behaviors: ["splashes in the water", "claps its flippers", "barks happily"] },
+            dog: { emoji: "🐕", color: "#8D6E63",
+                behaviors: ["wags its tail", "brings you a ball", "licks your face"] },
+            turtle: { emoji: "🐢", color: "#43A047",
+                behaviors: ["slowly blinks at you", "hides in its shell", "nibbles lettuce"] },
+            hippo: { emoji: "🦛", color: "#7E57C2",
+                behaviors: ["yawns widely", "splashes mud", "grunts loudly"] },
+            cat: { emoji: "🐈", color: "#FF7043",
+                behaviors: ["purrs contently", "knocks things over", "ignores you"] },
+            bear: { emoji: "🐻", color: "#5D4037",
+                behaviors: ["gives you honey", "stands on hind legs", "takes a nap"] },
+            zebra: { emoji: "🦓", color: "#616161",
+                behaviors: ["gallops around", "nuzzles your hand", "eats grass"] },
+            polar_bear: { emoji: "🐻‍❄️", color: "#B3E5FC",
+                behaviors: ["slides on ice", "shakes off water", "hugs you gently"] },
+            giraffe: { emoji: "🦒", color: "#FFCA28",
+                behaviors: ["stretches its neck", "licks leaves", "blinks slowly"] },
+            rhino: { emoji: "🦏", color: "#78909C",
+                behaviors: ["charges playfully", "rolls in mud", "snorts loudly"] },
+            elephant: { emoji: "🐘", color: "#9E9E9E",
+                behaviors: ["sprays water", "trumpets happily", "offers you a ride"] },
+            kangaroo: { emoji: "🦘", color: "#FF8A65",
+                behaviors: ["hops around", "boxes playfully", "shows you its joey"] },
+            crocodile: { emoji: "🐊", color: "#4CAF50",
+                behaviors: ["sunbathes", "snaps playfully", "slides into water"] }
+        };
+
+        // Initialize game
+        document.addEventListener("DOMContentLoaded", function() {
+            const story = document.getElementById("story");
+            const input = document.getElementById("userInput");
+            const button = document.getElementById("sendButton");
+            
+            // Enhanced welcome message
+            const welcomeMsg = [
+                "🌿 Welcome to Mega Animal Sanctuary! 🌿",
+                "We care for: 🦭 🐕 🐢 🦛 🐈 🐻 🦓 🐻‍❄️ 🦒 🦏 🐘 🦘 🐊",
+                "Type actions like 'pet the seal' or 'feed the elephants'!"
+            ];
+            
+            welcomeMsg.forEach((msg, i) => {
+                setTimeout(() => {
+                    story.innerHTML += `<p class="ai-msg"><strong>Sanctuary:</strong> ${msg}</p>`;
+                    story.scrollTop = story.scrollHeight;
+                }, i * 800);
+            });
+            
+            // Handle user input
+            button.onclick = handleInput;
+            input.onkeypress = function(e) {
+                if (e.key === "Enter") handleInput();
+            };
+            
+            function handleInput() {
+                const text = input.value.trim();
+                if (!text) return;
+                
+                // Add player message
+                story.innerHTML += `<p class="player-msg"><strong>You:</strong> ${text}</p>`;
+                input.value = "";
+                
+                // Generate random animal response
+                setTimeout(function() {
+                    const animalKeys = Object.keys(animals);
+                    const randomAnimal = animalKeys[Math.floor(Math.random() * animalKeys.length)];
+                    const animal = animals[randomAnimal];
+                    const behavior = animal.behaviors[Math.floor(Math.random() * animal.behaviors.length)];
+                    
+                    story.innerHTML += `
+                        <p class="ai-msg">
+                            <strong>Sanctuary:</strong> 
+                            <span style="color:${animal.color}">${animal.emoji}</span> 
+                            The ${randomAnimal.replace("_", " ")} ${behavior}!
+                        </p>
+                    `;
+                    story.scrollTop = story.scrollHeight;
+                }, 600);
+            }
+        });
+    </script>
+</body>
+</html>
