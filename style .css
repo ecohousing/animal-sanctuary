@@ -1,0 +1,18 @@
+h1 {
+    color: #3E7CB1 !important; /* Deep blue */
+    text-shadow: 
+      1px 1px 0 white, 
+      2px 2px 4px rgba(0,0,0,0.2); /* White outline for contrast */
+  }
+  
+  /* Optional: Add animal emojis beside the title */
+  h1::before, h1::after {
+    content: "🦫";
+    color: #8B5A2B; /* Capybara brown */
+    padding: 0 10px;
+  }
+  
+  h1::after {
+    content: "🐧"; /* Penguin */
+    color: #2C2C2C;
+  }
